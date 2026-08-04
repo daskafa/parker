@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Host Nginx / reverse proxy arkasinda HTTPS ve client IP dogru okunsun.
+        $middleware->trustProxies(at: '*');
+
         // Bu uygulama tamamen API-driven; kimliksiz istekleri bir "login"
         // web route'una yonlendirmeye calismak yerine dogrudan 401 JSON dondurulur.
         $middleware->redirectGuestsTo(fn () => null);
