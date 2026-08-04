@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   },
   description:
     "Solana ekosistemine katılmak için bir kılavuz. Builder'lar tarafından, builder'lar için.",
+  icons: {
+    icon: [{ url: "/logo-small.svg", type: "image/svg+xml" }],
+    apple: "/logo-small.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
