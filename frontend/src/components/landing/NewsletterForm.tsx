@@ -1,0 +1,124 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import { apiPost } from "@/lib/api";
+
+type SubscriberData = {
+  id: number;
+  email: string;
+  createdAt: string;
+};
+
+type Status = "idle" | "loading" | "success" | "error";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const INVALID_EMAIL_MESSAGE = "Lütfen geçerli bir e-posta adresi giriniz.";
+
+function validateEmail(value: string): string | null {
+  const email = value.trim();
+
+  if (!email || !EMAIL_PATTERN.test(email)) {
+    return INVALID_EMAIL_MESSAGE;
+  }
+
+  return null;
+}
+
+export function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (status === "loading") {
+      return;
+    }
+
+    const clientError = validateEmail(email);
+
+    if (clientError) {
+      setStatus("error");
+      setMessage(clientError);
+      return;
+    }
+
+    setStatus("loading");
+    setMessage(null);
+
+    const result = await apiPost<SubscriberData>("/subscribers", {
+      email: email.trim().toLowerCase(),
+    });
+
+    if (result.success) {
+      setStatus("success");
+      setMessage(result.message);
+      setEmail("");
+      return;
+    }
+
+    setStatus("error");
+    setMessage(result.errors?.email?.[0] ?? result.message);
+  }
+
+  const isLoading = status === "loading";
+  const hasError = status === "error";
+
+  return (
+    <div className="rounded-xl bg-[#18151c] p-6 sm:p-8">
+      <h3 className="text-lg font-semibold text-white">Solana Developer Update</h3>
+      <p className="mt-2 text-sm text-zinc-400">
+        Sign up to the newsletter and learn about new resources, new commits, new proposals, and more.
+      </p>
+
+      <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3 sm:flex-row" noValidate>
+        <label htmlFor="newsletter-email" className="sr-only">
+          Email
+        </label>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (status === "error" || status === "success") {
+              setStatus("idle");
+              setMessage(null);
+            }
+          }}
+          placeholder="Email"
+          disabled={isLoading}
+          aria-invalid={hasError}
+          aria-describedby="newsletter-feedback"
+          className={`flex-1 rounded-full border bg-black px-4 py-2.5 text-sm text-white outline-none placeholder:text-zinc-500 disabled:opacity-60 ${
+            hasError
+              ? "border-red-500 focus:border-red-400"
+              : "border-zinc-700 focus:border-zinc-400"
+          }`}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="cursor-pointer rounded-full bg-[#14F195] px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-white hover:text-[#14F195] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-[#14F195] disabled:hover:text-black"
+        >
+          {isLoading ? "Sending..." : "SIGN UP"}
+        </button>
+      </form>
+
+      {message && (
+        <p
+          id="newsletter-feedback"
+          role="status"
+          className={`mt-3 text-sm ${status === "success" ? "text-[#14F195]" : "text-red-400"}`}
+        >
+          {message}
+        </p>
+      )}
+    </div>
+  );
+}

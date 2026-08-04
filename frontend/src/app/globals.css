@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08080c;
+  --surface: #12121a;
+  --surface-2: #191922;
+  --border-subtle: #24242f;
+  --foreground: #f4f4f6;
+  --muted: #9a9aa8;
+  --brand-purple: #8b5cf6;
+  --brand-pink: #ec4899;
+  --brand-orange: #f59e0b;
+  --brand-green: #59f3a6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border-subtle: var(--border-subtle);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-green: var(--brand-green);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+button:disabled,
+a[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+.brand-gradient-text {
+  background-image: linear-gradient(90deg, var(--brand-purple), var(--brand-pink), var(--brand-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-gradient-bg {
+  background-image: linear-gradient(90deg, #3b82f6, var(--brand-purple), var(--brand-pink));
+}
