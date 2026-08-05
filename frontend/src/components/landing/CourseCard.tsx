@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { DeadLink } from "./DeadLink";
 
 type CourseCardProps = {
   image: string;
@@ -8,10 +9,7 @@ type CourseCardProps = {
 
 export function CourseCard({ image, chapters, title }: CourseCardProps) {
   return (
-    <a
-      href="#"
-      className="group relative aspect-[37/32] cursor-pointer overflow-hidden rounded-xl bg-[#0a0612] transition hover:brightness-110"
-    >
+    <DeadLink className="group relative aspect-[37/32] cursor-pointer overflow-hidden rounded-xl bg-[#0a0612] transition hover:brightness-110">
       <Image
         src={image}
         alt=""
@@ -29,6 +27,6 @@ export function CourseCard({ image, chapters, title }: CourseCardProps) {
           <Image src="/right-arrow.svg" alt="" width={26} height={26} className="shrink-0 transition group-hover:translate-x-0.5" />
         </div>
       </div>
-    </a>
+    </DeadLink>
   );
 }

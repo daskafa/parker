@@ -3,13 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Container } from "./Container";
+import { DeadLink } from "./DeadLink";
 
-const NAV_LINKS = [
-  { label: "Learn", href: "#" },
-  { label: "Build", href: "#" },
-  { label: "Network", href: "#" },
-  { label: "Community", href: "#" },
-];
+const NAV_LINKS = ["Learn", "Build", "Network", "Community"];
 
 function ChevronDownIcon({ className = "" }: { className?: string }) {
   return (
@@ -33,20 +29,19 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-black">
       <Container className="flex items-center justify-between py-4">
-        <a href="#" className="flex cursor-pointer items-center transition hover:opacity-90">
+        <DeadLink className="flex cursor-pointer items-center transition hover:opacity-90">
           <Image src="/logo.png" alt="Solana" width={646} height={96} priority className="h-6 w-auto sm:h-7" />
-        </a>
+        </DeadLink>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
+          {NAV_LINKS.map((label) => (
+            <DeadLink
+              key={label}
               className="flex cursor-pointer items-center gap-1 text-sm font-medium text-zinc-400 transition hover:text-white"
             >
-              {link.label}
+              {label}
               <ChevronDownIcon className="h-3.5 w-3.5" />
-            </a>
+            </DeadLink>
           ))}
         </nav>
 
@@ -77,16 +72,15 @@ export function Header() {
       {open && (
         <nav className="border-t border-zinc-800 bg-black px-4 py-4 md:hidden">
           <ul className="flex flex-col gap-4 text-sm font-medium">
-            {NAV_LINKS.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
+            {NAV_LINKS.map((label) => (
+              <li key={label}>
+                <DeadLink
                   onClick={() => setOpen(false)}
                   className="flex cursor-pointer items-center gap-1 text-zinc-400 transition hover:text-white"
                 >
-                  {link.label}
+                  {label}
                   <ChevronDownIcon className="h-3.5 w-3.5" />
-                </a>
+                </DeadLink>
               </li>
             ))}
           </ul>

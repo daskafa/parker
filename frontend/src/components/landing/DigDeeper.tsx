@@ -53,7 +53,7 @@ export function DigDeeper() {
     <section className="overflow-hidden bg-black">
       <Container className="py-16 sm:py-20">
         <h2 className="text-3xl font-semibold text-white sm:text-4xl">Dig deeper.</h2>
-        <p className="mt-2 text-sm text-zinc-400 sm:text-base">
+        <p className="mt-2 text-sm text-[#C4C4C4] sm:text-base">
           Learn from resources across the greater Solana ecosystem.
         </p>
 

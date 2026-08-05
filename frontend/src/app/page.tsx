@@ -22,8 +22,10 @@ export default function Home() {
         <Hero />
         <GetStarted />
         <DigDeeper />
-        <GoToSource />
-        <Changelog />
+        <div className="bg-[linear-gradient(to_bottom,#19161C_0%,#000000_42%)]">
+          <GoToSource />
+          <Changelog />
+        </div>
         <CtaSection />
       </main>
       <Footer />

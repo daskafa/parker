@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { Container } from "./Container";
+import { DeadLink } from "./DeadLink";
 
 const SOCIAL_ICONS = [
-  { src: "/discord.svg", label: "Discord" },
+  { src: "/youtube-footer.svg", label: "YouTube" },
   { src: "/x.svg", label: "X" },
-  { src: "/telegram.svg", label: "Telegram" },
+  { src: "/discord.svg", label: "Discord" },
   { src: "/reddit.svg", label: "Reddit" },
   { src: "/github.svg", label: "GitHub" },
-  { src: "/youtube-footer.svg", label: "YouTube" },
+  { src: "/telegram.svg", label: "Telegram" },
 ];
 
 const SOLANA_LINKS = ["Grants", "Break Solana", "Media Kit", "Careers", "Disclaimer"];
@@ -15,24 +16,22 @@ const CONNECT_LINKS = ["Ecosystem", "Blog", "Newsletter"];
 
 export function Footer() {
   return (
-    <footer className="border-t border-zinc-900 bg-[#050508]">
-      <div className="bg-gradient-to-r from-[#00BCD4] to-[#0047FF] py-1.5" aria-hidden />
+    <footer className="border !border-[#141414] bg-[#000508]">
       <Container className="py-12">
         <div className="flex flex-col justify-between gap-10 sm:flex-row">
           <div>
             <Image src="/logo-small.svg" alt="Solana" width={31} height={27} className="h-6 w-auto" />
-            <p className="mt-4 text-sm text-zinc-400">Managed by Solana Foundation</p>
+            <p className="mt-4 text-sm text-white">Managed by Solana Foundation</p>
 
             <div className="mt-4 flex items-center gap-2">
               {SOCIAL_ICONS.map((icon) => (
-                <a
+                <DeadLink
                   key={icon.label}
-                  href="#"
                   aria-label={icon.label}
                   className="cursor-pointer overflow-hidden rounded transition hover:opacity-70"
                 >
                   <Image src={icon.src} alt="" width={26} height={16} />
-                </a>
+                </DeadLink>
               ))}
             </div>
 
@@ -45,9 +44,7 @@ export function Footer() {
               <ul className="space-y-2.5 text-sm text-zinc-400">
                 {SOLANA_LINKS.map((item) => (
                   <li key={item}>
-                    <a href="#" className="cursor-pointer transition hover:text-white">
-                      {item}
-                    </a>
+                    <DeadLink className="cursor-pointer transition hover:text-white">{item}</DeadLink>
                   </li>
                 ))}
               </ul>
@@ -58,9 +55,7 @@ export function Footer() {
               <ul className="space-y-2.5 text-sm text-zinc-400">
                 {CONNECT_LINKS.map((item) => (
                   <li key={item}>
-                    <a href="#" className="cursor-pointer transition hover:text-white">
-                      {item}
-                    </a>
+                    <DeadLink className="cursor-pointer transition hover:text-white">{item}</DeadLink>
                   </li>
                 ))}
               </ul>
