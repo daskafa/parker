@@ -15,7 +15,7 @@ const COURSES = [
 export function GetStarted() {
   return (
     <section className="bg-black">
-      <Container className="py-16 sm:py-20">
+      <Container className="pt-2 pb-16 sm:pt-6 sm:pb-20">
         <h2 className="text-3xl font-semibold text-white sm:text-4xl">Get started.</h2>
         <p className="mt-2 text-sm text-[#C4C4C4] sm:text-base">
           Use these Solana Foundation and community courses to begin your journey into Solana development.

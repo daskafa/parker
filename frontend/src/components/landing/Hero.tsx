@@ -21,7 +21,7 @@ export function Hero() {
         />
       </div>
 
-      <Container className="relative z-10 grid items-start gap-10 pt-[129px] pb-14 sm:pb-20 lg:grid-cols-2 lg:gap-16 lg:pb-28">
+      <Container className="relative z-10 grid items-start gap-10 pt-12 pb-4 sm:pt-20 sm:pb-8 lg:grid-cols-2 lg:gap-16 lg:pt-[129px] lg:pb-8">
         <div>
           <h1 className="text-4xl font-normal leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl">
             Developer
