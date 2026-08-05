@@ -9,74 +9,46 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Services\CustomerService;
 use App\Support\ApiResponse;
+use App\Support\ListQuery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
+    public function __construct(
+        private readonly CustomerService $customers,
+    ) {}
+
     public function index(Request $request): JsonResponse
     {
-        $query = Customer::query()->orderBy('name');
-
-        $customers = $query->paginate((int) $request->query('per_page', 15));
+        $paginator = $this->customers->list(ListQuery::fromRequest($request));
 
         return ApiResponse::paginated(
-            CustomerResource::collection($customers),
-            $customers,
+            CustomerResource::collection($paginator),
+            $paginator,
             'Müşteriler listelendi.',
         );
     }
 
     public function store(StoreCustomerRequest $request): JsonResponse
     {
-        $customer = DB::transaction(function () use ($request) {
-            $isDefault = (bool) $request->validated('isDefault', false);
-
-            if ($isDefault) {
-                Customer::query()->where('is_default', true)->update(['is_default' => false]);
-            }
-
-            return Customer::create([
-                'name' => $request->validated('name'),
-                'email' => $request->validated('email'),
-                'is_default' => $isDefault,
-            ]);
-        });
+        $customer = $this->customers->create($request->validated());
 
         return ApiResponse::success(new CustomerResource($customer), 'Müşteri eklendi.', 201);
     }
 
     public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse
     {
-        DB::transaction(function () use ($request, $customer) {
-            $isDefault = (bool) $request->validated('isDefault', $customer->is_default);
+        $updated = $this->customers->update($customer, $request->validated());
 
-            if ($isDefault) {
-                Customer::query()->where('id', '!=', $customer->id)->where('is_default', true)->update(['is_default' => false]);
-            }
-
-            $customer->update([
-                'name' => $request->validated('name'),
-                'email' => $request->validated('email'),
-                'is_default' => $isDefault,
-            ]);
-        });
-
-        return ApiResponse::success(new CustomerResource($customer->fresh()), 'Müşteri güncellendi.');
+        return ApiResponse::success(new CustomerResource($updated), 'Müşteri güncellendi.');
     }
 
     public function destroy(Customer $customer): JsonResponse
     {
-        if ($customer->is_default) {
-            return ApiResponse::error(
-                'Bildirim alıcısı silinemez. Önce başka bir kaydı bildirim alıcısı yapın.',
-                422,
-            );
-        }
-
-        $customer->delete();
+        $this->customers->delete($customer);
 
         return ApiResponse::success(null, 'Müşteri silindi.');
     }

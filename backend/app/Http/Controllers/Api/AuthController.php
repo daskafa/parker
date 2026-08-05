@@ -6,53 +6,39 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
+use App\Services\AuthService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private readonly AuthService $auth,
+    ) {}
+
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
 
-        $user = User::where('email', $credentials['email'])->first();
-
-        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
-            return ApiResponse::error('E-posta veya şifre hatalı.', 401);
-        }
-
-        $token = $user->createToken('admin-panel')->plainTextToken;
-
-        return ApiResponse::success([
-            'token' => $token,
-            'user' => $this->transformUser($user),
-        ], 'Giriş başarılı.');
+        return ApiResponse::success(
+            $this->auth->login($credentials['email'], $credentials['password']),
+            'Giriş başarılı.',
+        );
     }
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()?->currentAccessToken()?->delete();
+        $this->auth->logout($request->user());
 
         return ApiResponse::success(null, 'Çıkış yapıldı.');
     }
 
     public function me(Request $request): JsonResponse
     {
-        return ApiResponse::success($this->transformUser($request->user()), 'Kullanıcı bilgisi.');
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function transformUser(User $user): array
-    {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-        ];
+        return ApiResponse::success(
+            $this->auth->profile($request->user()),
+            'Kullanıcı bilgisi.',
+        );
     }
 }

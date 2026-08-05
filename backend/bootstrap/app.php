@@ -1,6 +1,8 @@
 <?php
 
 use App\Exceptions\AppointmentSlotUnavailableException;
+use App\Exceptions\BusinessRuleException;
+use App\Exceptions\ConflictException;
 use App\Exceptions\InvalidAppointmentTokenException;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -42,6 +44,14 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if ($e instanceof InvalidAppointmentTokenException) {
+                return ApiResponse::error($e->getMessage(), $e->status());
+            }
+
+            if ($e instanceof ConflictException) {
+                return ApiResponse::error($e->getMessage(), $e->status());
+            }
+
+            if ($e instanceof BusinessRuleException) {
                 return ApiResponse::error($e->getMessage(), $e->status());
             }
 

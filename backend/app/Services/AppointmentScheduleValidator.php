@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\AppointmentStatus;
 use App\Exceptions\AppointmentSlotUnavailableException;
-use App\Models\Appointment;
+use App\Repositories\Contracts\AppointmentRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Randevu icin secilen tarih/saatin is kurallarina (mesai saatleri,
- * gecmis tarih, dolu slot) uygunlugunu dogrular.
+ * Randevu icin secilen tarih/saatin is kurallarina uygunlugunu dogrular.
  */
 class AppointmentScheduleValidator
 {
+    public function __construct(
+        private readonly AppointmentRepositoryInterface $appointments,
+    ) {}
+
     /**
      * @throws ValidationException
      * @throws AppointmentSlotUnavailableException
@@ -64,12 +66,7 @@ class AppointmentScheduleValidator
      */
     private function assertSlotAvailable(Carbon $scheduledAt): void
     {
-        $slotTaken = Appointment::query()
-            ->where('scheduled_at', $scheduledAt)
-            ->where('status', '!=', AppointmentStatus::Cancelled->value)
-            ->exists();
-
-        if ($slotTaken) {
+        if ($this->appointments->slotTaken($scheduledAt)) {
             throw new AppointmentSlotUnavailableException;
         }
     }
