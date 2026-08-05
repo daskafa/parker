@@ -2,7 +2,7 @@
 
 E-posta toplama, token’lı randevu akışı ve admin paneli içeren full-stack uygulama.
 
-**Canlı:** [https://assignment1.newu.digital](https://assignment1.newu.digital) · **Admin:** [/admin](https://assignment1.newu.digital/admin)
+**Canlı:** [https://assignment1.newu.digital](https://assignment1.newu.digital) · **Admin:** [/admin](https://assignment1.newu.digital/admin) · **MailHog:** [http://assignment1.newu.digital:8025](http://assignment1.newu.digital:8025)
 
 | Demo | |
 |------|--|
